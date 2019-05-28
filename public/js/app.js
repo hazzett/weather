@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
     e.preventDefault();
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(function(position){
-            message2.textContent = "Your current position is (" + "Latitude: " + position.coords.latitude + ", " + "Longitude: " + position.coords.longitude + ")";
             fetch("/weather?lat=" + position.coords.latitude+"&lon="+ position.coords.longitude).then((response) => {
                 response.json().then((data) => {
                     if (data.error) {
