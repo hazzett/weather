@@ -40,22 +40,39 @@ app.get('/help', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-    if (!req.query.address) {
+    if (!req.query.address && (!req.query.lon || !req.query.lat)) {
         return res.send({
             error: 'address is a requirement; please fix this and retry.'
         })
     }
 
-    geocode(req.query.address, (error, {latitude, longitude, location} = {}) => {
-        if (error) { return res.send({ error }) }
-        forecast(latitude, longitude, (error, forecastData) => {
-            if (error) { return res.send({ error: error }) }
-            res.send({
-                location: location,
-                forecast: forecastData
+    if (req.query.address) {
+        console.log("loading with address...")
+
+        geocode.geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
+            if (error) { return res.send({ error }) }
+            forecast(latitude, longitude, (error, forecastData) => {
+                if (error) { return res.send({ error: error }) }
+                res.send({
+                    location: location,
+                    forecast: forecastData
+                })
             })
-        })
-    })
+        });
+
+    } else if (req.query.lon && req.query.lat) {
+        console.log("loading with lon and lat...")
+        geocode.reverseGeocode(req.query.lon, req.query.lat, (error, geolocation) => {
+            if (error) { return res.send({ error }) }
+            forecast(req.query.lat, req.query.lon, (error, forecastData) => {
+                if (error) { return res.send({ error: error }) }
+                res.send({
+                    location: geolocation,
+                    forecast: forecastData
+                })
+            })
+        });
+    }
 });
 
 app.get('/help/*', (req, res) => {
@@ -64,6 +81,7 @@ app.get('/help/*', (req, res) => {
         title: 'HELP PNF: 404!!!!!',
     });
 });
+
 app.get('*', (req, res) => {
     res.render('404', {
         name: 'sam',
@@ -72,5 +90,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log('Serving to port '+port+' (Y)');
+    console.log('Serving to port ' + port + ' (Y)');
 })
