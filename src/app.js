@@ -3,9 +3,14 @@ const express = require('express');
 const hbs = require('hbs');
 const geocode = require('./utils/geocode');
 const forecast = require('./utils/forecast');
+const fs = require('fs');
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(bodyParser.json({limit: '16mb'}));
+app.use(bodyParser.urlencoded({extended: false, limit: '16mb'}));
 
 // paths for express config
 const publicDirPath = path.join(__dirname, '../public');
@@ -73,6 +78,20 @@ app.get('/weather', (req, res) => {
             })
         });
     }
+});
+
+app.post('/recv', (req, res) => {
+    console.log('new post at /recv!')
+    if (!req.body.img) {
+        return console.log('the request body had null img attribute!')
+    }
+    var matches = req.body.img.match(/^data:.+\/(.+);base64,(.*)$/);
+    var buffer = new Buffer.from(matches[2], 'base64');
+    var savePath = path.resolve(__dirname + '/../public/uploads/'
+        + Math.floor(Math.random() * 1000000) + '.png');
+    fs.writeFileSync(savePath, buffer);
+    console.log(savePath + ' lat:'+ req.body.lat + " long: "+ req.body.long);
+    res.sendStatus(200);
 });
 
 app.get('/help/*', (req, res) => {
