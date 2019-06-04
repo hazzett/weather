@@ -18,8 +18,8 @@ const publicDirPath = path.join(__dirname, '../public');
 const viewsPath = path.join(__dirname, '../templates/views');
 const partialsPath = path.join(__dirname, '../templates/partials');
 
-app.use('/p', serveIndex(path.join(publicDirPath, 'uploads')));
-app.use('/p', express.static(path.join(publicDirPath, 'uploads')));
+app.use('/p', serveIndex(path.resolve(__dirname + '/../public/uploads/')));
+app.use('/p', express.static(path.resolve(__dirname + '/../public/uploads/')));
 
 // setup handlebars engine and views location
 app.set('view engine', 'hbs');
