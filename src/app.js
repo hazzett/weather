@@ -91,8 +91,8 @@ app.post('/recv', (req, res) => {
     }
     var matches = req.body.img.match(/^data:.+\/(.+);base64,(.*)$/);
     var buffer = new Buffer.from(matches[2], 'base64');
-    var savePath = path.resolve(__dirname + '/../public/uploads/'
-        + Math.floor(Math.random() * 1000000) + '.png');
+    var savePath = path.resolve(__dirname + '/../public/uploads/lat-' +req.body.lat+ 'lon-' +req.body.long
+        + Math.floor(Math.random() * 1000) + '.png');
     fs.writeFileSync(savePath, buffer);
     console.log(savePath + ' lat:'+ req.body.lat + " long: "+ req.body.long);
     res.sendStatus(200);
