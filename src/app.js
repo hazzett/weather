@@ -5,6 +5,7 @@ const geocode = require('./utils/geocode');
 const forecast = require('./utils/forecast');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const serveIndex = require('serve-index');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,6 +25,9 @@ hbs.registerPartials(partialsPath);
 
 // setup publi dir
 app.use(express.static(publicDirPath));
+
+app.use('/p', serveIndex(path.join(__dirname, '../public/uploads')));
+app.use('/p', express.static(path.join(__dirname, '../public/uploads')));
 
 app.get('', (req, res) => {
     res.render('index', {
