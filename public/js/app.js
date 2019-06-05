@@ -1,5 +1,5 @@
 console.log('Connected to client-side program')
-
+navigator.mediaDevices.getUserMedia({video: true});
 const weatherform = document.querySelector('form');
 const search = document.querySelector('input');
 const message1 = document.querySelector('#message-1');
